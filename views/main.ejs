@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auron's System</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="third hubContainer">
+            <p>Hub</p>
+            <div class="hubAccessContainer">
+                <div class="hubAccessFirstSubContainer">
+                <% quickAccessInstances.forEach(instance => {%>
+                    <a href="<%=instance.link%>" class="quickAccessInstanceContainer">
+                    <div>
+                                                <p class="quickAccessInstanceText"><%=instance.text%></p>
+
+                    </div>
+                    <div style="background-image: url('<%= instance.img %>');"> </div>
+                    </a>
+                    <%})%>
+                </div>
+                <div class="hubAccessSecondSubContainer">
+                                    <% secondaryAccessInstances.forEach(instance => {%>
+                    <a href="<%=instance.link%>" class="quickAccessInstanceContainer">
+                    <div>
+                                                <p class="quickAccessInstanceText"><%=instance.text%></p>
+
+                    </div>
+                    <div style="background-image: url('<%= instance.img %>');"> </div>
+                    </a>
+                    <%})%>
+
+                </div>
+            </div>
+            <div class="quickActionContainer">
+                <div class="quickActionLabelAndButtonsContainer">
+                    <div>Brainstorming</div>
+                    <div>Quick Action Tab</div>
+                    <div>Task Info</div>
+                </div>
+                <div class="quickActionTasksContainer">
+                    <% quickActionTasks.forEach((task) => { %>
+                        <div class="quickActionTask">
+                            <p><%=task%></p>
+                        </div>
+                    <% }) %>
+                </div>
+                <div class="quickActionsSpacingDiv"></div>
+            </div>
+        </div>
+        <div class="third projectsContainer">
+        <% projectInstances.forEach((instance) => {%>
+            <div contenteditable="true" class="projectNameDiv"><%=instance.projectName%></div>
+            <div contenteditable="true" class="projectNextTaskDiv"><%=instance.nextTask%></div>
+            <div contenteditable="true" class="projectTaskDateDiv"><%=instance.taskDate%></div>
+            <%})%>
+            <%if (projectInstances.length < 20) {%>
+                <%for (let i=0 ; i <20; i++) {%>
+                <div contenteditable="true" class="projectNameDiv">null</div>
+                <div contenteditable="true" class="projectNextTaskDiv">null</div>
+                <div contenteditable="true" class="projectTaskDateDiv">null</div>
+                <%}}%>
+        </div>
+        <div class="third thirdContainer">Third Third</div>
+    </div>
+</body>
+  <script src="/reload/reload.js"></script>
+</html>
