@@ -9,9 +9,10 @@ const pool = new Pool({
 });
 
 // console.log(pool.query("INSERT INTO skibidi (test) values('BillyBob')"))
-let a = await pool.query("SELECT * from skibidi")
-console.log(a.rows)
+
+
+let a = await pool.query("SELECT * from quickactiontasks")
 
 export default {
-  query: (text) => pool.query(text),
+  query: (text,params) => pool.query(text,params),
 };

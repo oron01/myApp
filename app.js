@@ -14,9 +14,7 @@ const app = express()
 app.set('view engine', 'ejs')
 app.set('views','./views')
 
-
-
-app.use('/css', express.static('./public'));
+app.use(express.json())
 app.use(express.static("public"));
 
 

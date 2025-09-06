@@ -44,7 +44,7 @@
                 <div class="quickActionTasksContainer">
                     <% quickActionTasks.forEach((task) => { %>
                         <div class="quickActionTask">
-                            <p><%=task%></p>
+                            <p data-moveType="qa" data-id="<%=`taskId${task.id}`%>" data-position="<%=task.position%>" contenteditable="true"><%=task.content%></p>
                         </div>
                     <% }) %>
                 </div>
@@ -52,20 +52,21 @@
             </div>
         </div>
         <div class="third projectsContainer">
+            <div contenteditable="true" class="projectNameDiv">Project Name</div>
+            <div contenteditable="true" class="projectNextTaskDiv">Next Task</div>
+            <div contenteditable="true" class="projectTaskDateDiv">Sample Date</div>
+
         <% projectInstances.forEach((instance) => {%>
-            <div contenteditable="true" class="projectNameDiv"><%=instance.projectName%></div>
-            <div contenteditable="true" class="projectNextTaskDiv"><%=instance.nextTask%></div>
-            <div contenteditable="true" class="projectTaskDateDiv"><%=instance.taskDate%></div>
+            <div data-moveType="pi" data-minimove="1" data-id="<%=instance.id%>" data-type="project_name" data-position="<%=instance.position%>" contenteditable="true" class="projectNameDiv"><%=instance.project_name%></div>
+            <div data-moveType="pi" data-minimove="2" data-id="<%=instance.id%>" data-type="next_action" data-position="<%=instance.position%>" contenteditable="true" class="projectNextTaskDiv"><%=instance.next_action%></div>
+            <div data-moveType="pi" data-minimove="3" data-id="<%=instance.id%>" data-type="example_date" data-position="<%=instance.position%>" contenteditable="true" class="projectTaskDateDiv"><%=instance.example_date%></div>
             <%})%>
-            <%if (projectInstances.length < 20) {%>
-                <%for (let i=0 ; i <20; i++) {%>
-                <div contenteditable="true" class="projectNameDiv">null</div>
-                <div contenteditable="true" class="projectNextTaskDiv">null</div>
-                <div contenteditable="true" class="projectTaskDateDiv">null</div>
-                <%}}%>
+
         </div>
         <div class="third thirdContainer">Third Third</div>
     </div>
 </body>
   <script src="/reload/reload.js"></script>
+    <script src="js/main.js"></script>
+
 </html>
