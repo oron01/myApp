@@ -12,7 +12,6 @@ let setGlobalVersionChecker = async() => {
 
     let getCaretPosition = (el,parent,sel) => {
         let isFunctionViable = () => {
-            console.log(el)
             let test1 = !(el instanceof HTMLElement) || el.getAttribute('contenteditable') !== 'plaintext-only' && el.getAttribute('contenteditable') !== 'true'
             let test2 = !sel || !sel.isCollapsed || !el.contains(sel.anchorNode)
             if (!test1 && !test2) return true
@@ -51,127 +50,167 @@ document.addEventListener('keydown',async e => {
     let sel = window.getSelection()
     let caretPosition = getCaretPosition(e.target,el.parentElement,sel)
     
-    let getQAActionValidity = (key) => {
-                switch (key) {
-            case "ArrowDown":
-                if (position < 15)
-                break;
+    let qaActionHandler = (key,position) => {
+                    switch (key) {
+            case "ArrowDown":{
+                let isValidMovement = (position) => {
+                    if (position < 15) return true
+                    }
 
-            case "ArrowUp":
-                break;
+                let isValid = isValidMovement(position)
 
-            case "ArrowRight":
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)+7}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
                 break;
+            }
+            case "ArrowUp": {
+                let isValidMovement = (position) => {
+                    if (position > 7) return true
+                    }
 
-            case "ArrowLeft":
+                let isValid = isValidMovement(position)
+                console.log(isValid)
+                console.log(position)
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)-7}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
+
+                break;
+            }
+            case "ArrowRight":{
+
+                let isValidMovement = (position) => {
+                    if (![7,14,21].includes(position)) return true
+                    }
+
+                let isValid = isValidMovement(position)
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)+1}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
+                break;
+            }
+            case "ArrowLeft": {
+                let isValidMovement = (position) => {
+                    if (![1,8,15].includes(position)) return true
+                    }
+
+                let isValid = isValidMovement(position)
+
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)-1}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
                 break;   
-    }
-}
-    let getPIActionValidity = (key) => {
-                switch (key) {
-            case "ArrowDown":
-                break;
+                }
+            }
+        }       
 
-            case "ArrowUp":
-                break;
+    let piActionHandler = (key,position,minimove) => {
+                    switch (key) {
+            case "ArrowDown":{
+                let isValidMovement = (position) => {
+                    if (position < 22) return true
+                    }
 
-            case "ArrowRight":
-                break;
+                let isValid = isValidMovement(position)
 
-            case "ArrowLeft":
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)+1}"][data-minimove="${minimove}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
+                break;
+            }
+            case "ArrowUp": {
+                let isValidMovement = (position) => {
+                    if (position > 1) return true
+                    }
+
+                let isValid = isValidMovement(position)
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)-1}"][data-minimove="${minimove}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
+
+                break;
+            }
+            case "ArrowRight":{
+                let isValidMovement = (minimove) => {
+                    if (minimove < 3) return true
+                    }
+
+                let isValid = isValidMovement(minimove)
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${Number(position)}"][data-minimove="${Number(minimove)+1}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
+                break;
+            }
+            case "ArrowLeft": {
+                let isValidMovement = (minimove) => {
+                    if (minimove > 1) return true
+                }
+
+                let isValid = isValidMovement(minimove)
+
+                let handleAction = () => {
+                    let target = parent.parentElement.querySelector(`p[data-position="${position}"][data-minimove="${minimove-1}"]`)
+                    target.focus()
+                }
+                if (isValid) handleAction()
                 break;   
-    }
+                }
+            }
     }
 
-    let getActionType = (key,movetype) => {
-        let getIsPassingKeyCondition = (key) => {
+    let actionHandler = (key,movetype,position,minimove,e) => {
+
         switch (key) {
             case "ArrowDown":
                 if (!caretPosition.atEnd) return
-                if (actionType = "qa") {}
-                if (actionType = "pi") {}
+                if (movetype == "qa") qaActionHandler(key,position)
+                if (movetype == "pi") piActionHandler(key,position,minimove)
                 break;
 
             case "ArrowUp":
-                if (caretPosition.atStart) {}
+                if (!caretPosition.atStart) return
+                if (movetype == "qa") qaActionHandler(key,position)
+                if (movetype == "pi") piActionHandler(key,position,minimove)
+
                 break;
 
             case "ArrowRight":
-                if (caretPosition.atEnd) {}
+                if (!caretPosition.atEnd) return
+                if (movetype == "qa") qaActionHandler(key,position)
+                if (movetype == "pi") piActionHandler(key,position,minimove)
+
                 break;
 
             case "ArrowLeft":
-                if (caretPosition.atStart) {}
+                if (!caretPosition.atStart) return
+                if (movetype == "qa") qaActionHandler(key,position)
+                if (movetype == "pi") piActionHandler(key,position,minimove)
                 break;
             }}
-        // let isPassingKeyConditions = getIsPassingKeyCondition(key)
-        //Make sure is should be called base
-            // console.log(`Key Conditions Test: ${isPassingKeyConditions}`)
-        
-        let getIsPassingGridConditions = (movetype,position) => {
 
-        }
-    }
+    let position = Number(el.dataset.position)
+      let minimove = Number(el.dataset.minimove)
+    actionHandler(e.key,el.dataset.movetype,position,minimove,e)
+        //Make sure is should be called base
 
     let movetype = el.dataset.movetype
     // let actionType = getActionType(e.key,movetype)
 
-    let getNextTarget = (movetype,pos) => {}
-
-  let minimove = el.dataset.minimove
-
-  if (e.key === 'ArrowDown' && caretPosition.atEnd) {
-    let pos = Number(el.dataset.position)
-    e.preventDefault();
-
-    if (el.dataset.movetype == "qa" && pos < 15) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)+7}"]`)
-        target.focus()
-    }
-    else if (el.dataset.movetype == "pi" && pos < 22) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)+1}"][data-minimove="${minimove}"]`)
-        target.focus()
-    }
-  }
-
-  if (e.key === 'ArrowUp' && caretPosition.atStart) {
-    let pos = Number(el.dataset.position)
-    e.preventDefault();
-    if (el.dataset.movetype == "qa" && pos > 7) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)-7}"]`)
-        target.focus()
-    }
-        else if (el.dataset.movetype == "pi" && pos > 1) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)-1}"][data-minimove="${minimove}"]`)
-        target.focus()
-    }
-  }
-    if (e.key === 'ArrowRight' && caretPosition.atEnd) {
-    let pos = Number(el.dataset.position)
-    e.preventDefault();
-
-    if (el.dataset.movetype == "qa" && ![7,14,21].includes(pos)) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)+1}"]`)
-        target.focus()
-    }
-            else if (el.dataset.movetype == "pi" && minimove < 3) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)}"][data-minimove="${Number(minimove)+1}"]`)
-        target.focus()
-    }
-  }
-
-      if (e.key === 'ArrowLeft' && caretPosition.atStart) {
-    let pos = Number(el.dataset.position)
-    e.preventDefault();
-    if (el.dataset.movetype == "qa" && ![1,8,15].includes(pos)) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos-1)}"]`)
-        target.focus()
-    }
-            else if (el.dataset.movetype == "pi" && minimove > 1) {
-        let target = parent.parentElement.querySelector(`p[data-position="${Number(pos)}"][data-minimove="${Number(minimove)-1}"]`)
-        target.focus()
-    }
-  }
 });
 }
 setKeyMovement()
@@ -202,7 +241,6 @@ let createTextboxEventHandlers = () => {
 
 let updateDatabase = async (url,id,newValuesObj) => {
     let latestSessionToken = await getLatestSessionToken()
-    console.log(startingSessionToken + "" + latestSessionToken)
     if (!isValid(startingSessionToken,latestSessionToken)) {
         makeOutdated()
         return} 
@@ -239,7 +277,6 @@ let createProjectEventHandlers = () => {
     })   
 
             textbox.addEventListener("blur",(e) => {
-                console.log(e)
             updateProjects(e.target)
     })      
 
@@ -295,7 +332,6 @@ const isValid = (currentSessionToken,latestSessionToken) => {
         if (currentSessionToken != latestSessionToken) return true
         return false;
     }
-    console.log(`is outdated ${isOutdated(currentSessionToken,latestSessionToken)} current ${currentSessionToken} latest ${latestSessionToken}`)
     return (!isOutdated(currentSessionToken,latestSessionToken))
 }
 
@@ -306,7 +342,6 @@ let getLatestSessionToken = async () => {
     })
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json()   
-      console.log(data.data)
       return data.data
 }
 
