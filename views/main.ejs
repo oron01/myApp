@@ -44,7 +44,7 @@
                 <div class="quickActionTasksContainer">
                     <% quickActionTasks.forEach((task) => { %>
                         <div class="quickActionTask">
-                            <p data-moveType="qa" data-id="<%=`taskId${task.id}`%>" data-position="<%=task.position%>" contenteditable="true"><%=task.content%></p>
+                            <p data-moveType="qa" data-id="<%=`taskId${task.id}`%>" data-position="<%=task.position%>" contenteditable="plaintext-only"><%=task.content%></p>
                         </div>
                     <% }) %>
                 </div>
@@ -52,14 +52,20 @@
             </div>
         </div>
         <div class="third projectsContainer">
-            <div contenteditable="true" class="projectNameDiv">Project Name</div>
-            <div contenteditable="true" class="projectNextTaskDiv">Next Task</div>
-            <div contenteditable="true" class="projectTaskDateDiv">Sample Date</div>
+            <div class="projectNameDiv">Project Name</div>
+            <div class="projectNextTaskDiv">Next Task</div>
+            <div class="projectTaskDateDiv">Sample Date</div>
 
         <% projectInstances.forEach((instance) => {%>
-            <div data-moveType="pi" data-minimove="1" data-id="<%=instance.id%>" data-type="project_name" data-position="<%=instance.position%>" contenteditable="true" class="projectNameDiv"><%=instance.project_name%></div>
-            <div data-moveType="pi" data-minimove="2" data-id="<%=instance.id%>" data-type="next_action" data-position="<%=instance.position%>" contenteditable="true" class="projectNextTaskDiv"><%=instance.next_action%></div>
-            <div data-moveType="pi" data-minimove="3" data-id="<%=instance.id%>" data-type="example_date" data-position="<%=instance.position%>" contenteditable="true" class="projectTaskDateDiv"><%=instance.example_date%></div>
+            <div class="projectNameDiv">
+                <p class="pi" data-moveType="pi" data-minimove="1" data-id="<%=instance.id%>" data-type="project_name" data-position="<%=instance.position%>" contenteditable="plaintext-only"><%=instance.project_name%></p>
+            </div>
+            <div class="projectNextTaskDiv">
+                <p class="pi" data-moveType="pi" data-minimove="2" data-id="<%=instance.id%>" data-type="next_action" data-position="<%=instance.position%>" contenteditable="plaintext-only" ><%=instance.next_action%></p>
+            </div>
+            <div class="projectTaskDateDiv">
+                <p class="pi" data-moveType="pi" data-minimove="3" data-id="<%=instance.id%>" data-type="example_date" data-position="<%=instance.position%>" contenteditable="plaintext-only" ><%=instance.example_date%></p>
+            </div>
             <%})%>
 
         </div>
@@ -67,6 +73,6 @@
     </div>
 </body>
   <script src="/reload/reload.js"></script>
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
 
 </html>

@@ -1,9 +1,10 @@
 import express from "express"
 import quickActionTasksController from "../controllers/quickActionsController.js"
-import projectsController from "../controllers/projectsController.js"
+import projectsController from "../controllers/projectsMainHubController.js"
 import { quickAccessInstances, secondaryAccessInstances } from "../controllers/assets.js"
 import quickActionsRouter from "./quickActions.js"
 import projectsRouter from "./projects.js"
+import sessionRouter from "./session.js"
 
 
 const router = express.Router()
@@ -11,6 +12,7 @@ const router = express.Router()
 // router.use("/projects", projectsRouter);
 router.use("/quickActions", quickActionsRouter);
 router.use("/projects", projectsRouter);
+router.use("/session", sessionRouter);
 
 
 router.get("/",async (req,res) => {

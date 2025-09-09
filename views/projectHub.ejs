@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=projectData.project_name%></title>
+        <link rel="stylesheet" href="/css/projectHub.css">
+</head>
+<body>
+    <a class="backToHubLink" href="/">Back to Hub</a>
+<div class="mainContainer">
+  <div class="header">
+    <p>Project Name:
+      <span contenteditable="plaintext-only"> <%=projectData.project_name%></p>
+  </div>
+  <div class="contentContainerDiv">
+    <div class="contentTextHeaderDiv">
+      <p class="contentTextHeader">Project Main Dump:</p>
+    </div>
+    <div class="contentTextContainer">
+      <p contenteditable="plaintext-only" class="contentText"></p>
+    </div>
+        <div id="divForGrid"></div>
+
+  </div>
+    <div class="buttonsContainerDiv"></div>
+</div>
+</body>
+  <script src="/reload/reload.js"></script>
+</html>

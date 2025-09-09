@@ -1,8 +1,14 @@
 import {Router} from "express"
-import controller  from "../controllers/projectsController.js";
+import projectMainHubController  from "../controllers/projectsMainHubController.js";
+import projectHubController from "../controllers/projectsHubController.js"
 
 const router = Router()
-console.log("skibidi")
-router.patch("/:id",controller.updateProjects)
+router.patch("/projectsMainHub/:id",projectMainHubController.updateProjects)
+
+router.get("/projectHub/:id", async (req,res) => {
+    let {id} = req.params
+    const projectData =  await projectHubController.getProjectData(id)
+    res.render("projectHub", {projectData})
+})
 
 export default router

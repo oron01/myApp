@@ -1,5 +1,7 @@
 import db from "../db/db.js"
 
+let requestIsValid = async () => {
+}
 
  const getProjectInstances = async () => {
   let projectInstances = await db.query("SELECT * FROM projects")
@@ -11,7 +13,6 @@ import db from "../db/db.js"
 
   const {id} = req.params;
   const {newValue,type} = req.body;
-console.log(id)
   try {
 
     const result = await db.query(`UPDATE projects SET ${type} = $1 WHERE id = $2 RETURNING *`,      

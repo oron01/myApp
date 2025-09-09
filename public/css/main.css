@@ -7,6 +7,17 @@ padding: 1.5%;
 height: 87vh;
 }
 
+.outdated
+{background-color: black;
+pointer-events: none;
+filter: blur(50%);
+}
+
+.behindOutdated {
+  display: none !important;
+
+}
+
 .mainContainer {
     /* display: flex; */
     flex: auto;
@@ -228,11 +239,18 @@ border-right: 2px solid black;
 }
 
 .projectsContainer > div {
+  display: grid;
         border: 1px solid black;
         font-size: 95%;
             contain: size;
         overflow: auto;
+        justify-items: center;
+        justify-content: center;
+        text-justify: center;
 
+}
+.pi {
+  margin: auto;
 }
 
 .projectsContainer > div::-webkit-scrollbar { 

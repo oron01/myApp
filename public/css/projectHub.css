@@ -1,0 +1,101 @@
+* {
+        box-sizing: border-box;
+
+}
+
+body {
+    background: black;
+    padding: 2.5vh;
+    height: 90vh;
+}
+.backToHubLink {
+    position:absolute;
+    left: 0px;
+    top: 0px;
+    padding: 5px;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+}
+.mainContainer {
+    background-color: white;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 0.75fr 3fr 1fr;
+}
+
+.mainContainer > div {
+display: grid;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+
+.header {
+    /* background-color: red; */
+    font-size: 200%;
+}
+
+.header > p {
+    border: 4px solid black;
+    padding: 3px;
+}
+
+.header > p, span {
+    font-weight: 700;
+}
+
+.header span {padding-right: 5px;}
+
+.contentContainerDiv {
+    min-height: 0;    
+    background-color: black;
+    display: grid;
+    grid-template-rows: 1fr 4fr 1fr;
+    grid-template-columns: 1fr;
+}
+
+.contentContainerDiv > div { 
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+
+.contentTextHeader {
+display: grid;
+text-align: center;
+    font-size: 200%;
+    border-bottom: 3px solid black;
+    justify-self: center;
+    padding: 3px;
+    font-weight: 700;
+}
+
+
+.contentTextContainer {
+display: grid;
+height: 100%;
+
+}
+
+.contentText {
+    display: grid;
+    align-self: center;
+    justify-self: center;
+    width: 85%;
+    height: 85%;
+    border: 3px solid black;
+    padding: 10px;
+    contain: size;
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+.buttonsContainerDiv {
+    background-color: green;
+    height: 100%;
+    display: block;
+}
+
