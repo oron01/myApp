@@ -14,11 +14,10 @@ let setGlobalVersionChecker = async() => {
         let isFunctionViable = () => {
             let test1 = !(el instanceof HTMLElement) || el.getAttribute('contenteditable') !== 'plaintext-only' && el.getAttribute('contenteditable') !== 'true'
             let test2 = !sel || !sel.isCollapsed || !el.contains(sel.anchorNode)
-            if (!test1 && !test2) return true
+            return (!test1 && !test2)
         }
         let isCaretAtStart = () => {
-            if (sel.anchorOffset === 0) return true
-            return false
+            return (sel.anchorOffset === 0)
         }
         let isCaretAtEnd = () => {
             let test1 = sel.anchorOffset === el.textContent.length
@@ -26,7 +25,6 @@ let setGlobalVersionChecker = async() => {
             return (test1 || test2)
         }
         let isViable = isFunctionViable()
-        if (!isViable) console.log("obama")
         let atStart = isCaretAtStart()
         let atEnd = isCaretAtEnd()
         return {atStart,atEnd}
@@ -51,10 +49,12 @@ document.addEventListener('keydown',async e => {
     let caretPosition = getCaretPosition(e.target,el.parentElement,sel)
     
     let qaActionHandler = (key,position) => {
-                    switch (key) {
+            e.preventDefault()
+
+            switch (key) {
             case "ArrowDown":{
                 let isValidMovement = (position) => {
-                    if (position < 15) return true
+                    return (position < 15)
                     }
 
                 let isValid = isValidMovement(position)
@@ -68,7 +68,7 @@ document.addEventListener('keydown',async e => {
             }
             case "ArrowUp": {
                 let isValidMovement = (position) => {
-                    if (position > 7) return true
+                    return (position > 7)
                     }
 
                 let isValid = isValidMovement(position)
@@ -85,7 +85,7 @@ document.addEventListener('keydown',async e => {
             case "ArrowRight":{
 
                 let isValidMovement = (position) => {
-                    if (![7,14,21].includes(position)) return true
+                    return (![7,14,21].includes(position))
                     }
 
                 let isValid = isValidMovement(position)
@@ -98,7 +98,7 @@ document.addEventListener('keydown',async e => {
             }
             case "ArrowLeft": {
                 let isValidMovement = (position) => {
-                    if (![1,8,15].includes(position)) return true
+                    return (![1,8,15].includes(position))
                     }
 
                 let isValid = isValidMovement(position)
@@ -114,10 +114,12 @@ document.addEventListener('keydown',async e => {
         }       
 
     let piActionHandler = (key,position,minimove) => {
-                    switch (key) {
+            e.preventDefault()
+
+            switch (key) {
             case "ArrowDown":{
                 let isValidMovement = (position) => {
-                    if (position < 22) return true
+                    return (position < 22)
                     }
 
                 let isValid = isValidMovement(position)
@@ -131,7 +133,7 @@ document.addEventListener('keydown',async e => {
             }
             case "ArrowUp": {
                 let isValidMovement = (position) => {
-                    if (position > 1) return true
+                    return (position > 1)
                     }
 
                 let isValid = isValidMovement(position)
@@ -145,7 +147,7 @@ document.addEventListener('keydown',async e => {
             }
             case "ArrowRight":{
                 let isValidMovement = (minimove) => {
-                    if (minimove < 3) return true
+                    return (minimove < 3)
                     }
 
                 let isValid = isValidMovement(minimove)
@@ -158,7 +160,7 @@ document.addEventListener('keydown',async e => {
             }
             case "ArrowLeft": {
                 let isValidMovement = (minimove) => {
-                    if (minimove > 1) return true
+                    return (minimove > 1)
                 }
 
                 let isValid = isValidMovement(minimove)
@@ -312,7 +314,7 @@ let createProjectPageEventListeners = () => {
 
     let isTextCurrentlySelected = () => {
           const sel = window.getSelection?.();
-        if (!sel.isCollapsed) return true;
+        return (!sel.isCollapsed)
     }
 
     let projectNameDivs = getProjectNameDivs()
@@ -329,8 +331,7 @@ let createProjectPageEventListeners = () => {
 
 const isValid = (currentSessionToken,latestSessionToken) => {
     const isOutdated = (currentSessionToken,latestSessionToken) => {
-        if (currentSessionToken != latestSessionToken) return true
-        return false;
+        return (currentSessionToken != latestSessionToken)
     }
     return (!isOutdated(currentSessionToken,latestSessionToken))
 }
