@@ -7,4 +7,10 @@ let getProjectData = async (id) => {
     return projectData.rows[0]
 }
 
-export default {getProjectData}
+let getMainDump = async (id) => {
+      let projectData = await db.query(`SELECT content FROM projectMainDumps WHERE id = ${id}`)
+  console.log(projectData.rows)
+    return projectData.rows[0]
+}
+
+export default {getMainDump,getProjectData}

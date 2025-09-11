@@ -1,14 +1,10 @@
+import db from "/js/db.js"
+import {setUpSession,getLatestSessionToken,makeOutdated,isValid, setGlobalVersionChecker} from "/js/session.js"
 
-let setGlobalVersionChecker = async() => {
-    let body = document.querySelector("body")
-    body.addEventListener("focusin",async () => {
-        let latestSessionToken = await getLatestSessionToken()
-        if (!isValid(startingSessionToken,latestSessionToken)) {await makeOutdated()
-        return
-        }
-    })    
-}
- setGlobalVersionChecker()
+await setUpSession()
+const startingSessionToken = await getLatestSessionToken()
+
+await setGlobalVersionChecker(startingSessionToken, getLatestSessionToken,document)
 
     let getCaretPosition = (el,parent,sel) => {
         let isFunctionViable = () => {
@@ -241,24 +237,10 @@ let createTextboxEventHandlers = () => {
     })
 }
 
-let updateDatabase = async (url,id,newValuesObj) => {
-    let latestSessionToken = await getLatestSessionToken()
-    if (!isValid(startingSessionToken,latestSessionToken)) {
-        makeOutdated()
-        return} 
-    const res = await fetch(`/${url}/${id}`, {
-        method: "PATCH",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(newValuesObj)
-    })
-      const data = await res.json();
-    console.log(data); // { ok: true, updated: {…} }
-    
 
-}
 let updateQuickActionTask = async (task) => {
     let taskid = task.dataset.id.slice(6)
-    await updateDatabase("quickActions",taskid,{content:task.textContent})
+    await db.updateDatabase("quickActions",taskid,{content:task.textContent},startingSessionToken,await getLatestSessionToken())
 }
 
 let createProjectEventHandlers = () => {
@@ -268,30 +250,31 @@ let createProjectEventHandlers = () => {
         
         textbox.addEventListener("beforeinput",(e) => {
         if (e.inputType === "historyUndo") {
-            updateProjects(e.target)
+            updateProjects(e.target,"projects")
         }
     })
         
         textbox.addEventListener("beforeinput",(e) => {
         if (e.inputType === "historyRedo") {
-            updateProjects(e.target)
+            updateProjects(e.target,"projects")
         }
     })   
 
             textbox.addEventListener("blur",(e) => {
-            updateProjects(e.target)
+            updateProjects(e.target,"projects")
     })      
 
     })
 }
 
-let updateProjects = async (project) => {
+let updateProjects = async (project,table) => {
     let messageObject = 
     {newValue : project.textContent,
-        type : project.dataset.type
+        type : project.dataset.type,
+        table: table
         
     }
-    updateDatabase("projects/projectsMainHub",project.dataset.id,messageObject)
+    await db.updateDatabase("projects/projectsMainHub",project.dataset.id,messageObject,startingSessionToken,await getLatestSessionToken())
 
 }
 
@@ -329,42 +312,7 @@ let createProjectPageEventListeners = () => {
     })
 }
 
-const isValid = (currentSessionToken,latestSessionToken) => {
-    const isOutdated = (currentSessionToken,latestSessionToken) => {
-        return (currentSessionToken != latestSessionToken)
-    }
-    return (!isOutdated(currentSessionToken,latestSessionToken))
-}
-
-
-let getLatestSessionToken = async () => {
-        const res = await fetch(`/session`, {
-        method: "get",
-    })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json()   
-      return data.data
-}
-
-let setUpSession = async () => {
-    let a = await fetch("/session/increment", {
-        method:"post"
-    })
-    console.log(a.ok)
-   if (!a.ok) {throw new Error(`HTTP ${a.status}`); 
-  alert("couldn't icrement")
-  return r.json(); }
-
-return a
-}
-
-const makeOutdated = async () => {
-    console.log(startingSessionToken)
-    location.reload();
-    }
-
-await setUpSession()
-const startingSessionToken = await getLatestSessionToken()
+console.log(startingSessionToken)
 
 
 //Activating the functions

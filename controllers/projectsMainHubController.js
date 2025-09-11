@@ -1,8 +1,5 @@
 import db from "../db/db.js"
 
-let requestIsValid = async () => {
-}
-
  const getProjectInstances = async () => {
   let projectInstances = await db.query("SELECT * FROM projects")
   projectInstances.rows.sort((a,b) => a.position - b.position)
@@ -12,10 +9,10 @@ let requestIsValid = async () => {
  const updateProjects = async (req,res) => {
 
   const {id} = req.params;
-  const {newValue,type} = req.body;
+  const {newValue,type,table} = req.body;
   try {
 
-    const result = await db.query(`UPDATE projects SET ${type} = $1 WHERE id = $2 RETURNING *`,      
+    const result = await db.query(`UPDATE ${table} SET ${type} = $1 WHERE id = $2 RETURNING *`,      
     [newValue,id]
     )
     res.json({ok:true,updated:result.rows[0]})
