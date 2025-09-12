@@ -9,7 +9,35 @@
 </head>
 <body>
     <a class="backToHubLink" href="/">Back to Hub</a>
-<div class="mainContainer">
+      <div class="pageMoveButtonContainer">
+        <p class="prevPageButton"><</p></div>
+      <div class="pageMoveButtonContainer">
+        <p class="nextPageButton">></p>
+      </div>
+    <div class="mainContainer position">
+
+
+  <div class="dataPageContainer page1">
+    <div class="dataPageHeader">
+      <p><%=projectData.project_name%> Data Points</p>
+    </div>
+    <div class="dataPageContentContainer">
+      <div class="dataPageDataScrollerDiv">
+      <%for (let i = 0; i < 20 ; i++) {%>
+        <div data-position="<%=1+i%>" class="testerInstance">
+          <p contenteditable="plaintext-only"> Note <%=i+1%></p>
+          <div>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit obcaecati libero ipsam, voluptatibus itaque minima beatae commodi odio earum dignissimos deleniti impedit? Est omnis animi id a, dolores eveniet ipsam.</p>
+          </div>
+        </div>
+      <%}%>
+
+      </div>
+    </div>
+  </div>
+
+
+<div class="mainPageContainer selectedPage page2">
   <div class="header">
     <p>Project Name:
       <span contenteditable="plaintext-only"> <%=projectData.project_name%></p>
@@ -24,8 +52,11 @@
         <div id="divForGrid"></div>
 
   </div>
-    <div class="buttonsContainerDiv"></div>
+  <div class="quickAccessButtonsContainerDiv"></div>
 </div>
+<div class="nextPageContainer page3"></div>
+</div>
+
 </body>
   <script type="module" src="/js/projectHub.js"></script>
   <script src="/reload/reload.js"></script>
