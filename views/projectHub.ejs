@@ -23,14 +23,19 @@
     </div>
     <div class="dataPageContentContainer">
       <div class="dataPageDataScrollerDiv">
-      <%for (let i = 0; i < 20 ; i++) {%>
-        <div data-position="<%=1+i%>" class="testerInstance">
-          <p contenteditable="plaintext-only"> Note <%=i+1%></p>
+        <div data-projectID="<%=projectData.id%>" class="addNoteButton">
+          <p>+</p>
+        </div>
+      <% notesData.forEach((note,i) => { %>
+        <%console.log(notesData)%>
+        <div data-position="<%=i%>" class="testerInstance">
+          <p data-type="note_name" data-id="<%=note.id%>" contenteditable="plaintext-only"> <%=note.note_name%></p>
           <div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit obcaecati libero ipsam, voluptatibus itaque minima beatae commodi odio earum dignissimos deleniti impedit? Est omnis animi id a, dolores eveniet ipsam.</p>
+            <p data-type="content" data-id="<%=note.id%>" contenteditable="plaintext-only" class="noteMainContent"><%=note.content%></p>
+          <%console.log("aaaa" + JSON.stringify(note.content))%>
           </div>
         </div>
-      <%}%>
+      <%})%>
 
       </div>
     </div>

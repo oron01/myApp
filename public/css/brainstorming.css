@@ -1,0 +1,151 @@
+* { box-sizing: border-box;}
+
+body {
+    margin: 0;
+    height: 100vh;
+}
+
+.backToHubLink {
+    position:absolute;
+    left: 0px;
+    top: 0px;
+    padding: 5px;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+}
+
+
+.brainstormingMainContainer {
+    background-color: black;
+    height: 100%;
+    padding: 3vh 5%;
+    display: grid;
+    text-align: center;
+    grid-template-rows: 1fr 6fr;
+}
+
+.brainstormingHeader {
+    display: grid;
+    align-items: center;
+    background-color: white;
+    height: 100%;
+    justify-items: center;
+}
+
+.brainstormingHeader > p {
+    font-size: 2em;
+    font-weight: 700;
+    border: 3px solid black;
+    padding: 0.5% 1%;
+}
+
+.brainstormingContentContainer {
+    background-color: white;
+    height: 100%;
+    padding: 5%;
+    border: 3px solid black;
+    display: grid;
+}
+
+.brainstormingScrollerContainer {
+    background-color: white;
+    border: 3px solid black;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
+    contain: size;
+    position: relative;
+}
+
+.brainstormingInstance {
+    flex: 0 0 10%;
+    height: 10%;
+    border: 3px solid black;
+    cursor: grab;
+    display: grid;
+    grid-template-rows: 1fr 8fr;
+}
+
+.brainstormingInstance::-webkit-scrollbar {
+    display: none;
+}
+
+.instanceTitleDiv {
+    justify-self: center;
+}
+
+.selected {
+    min-height: 60%;
+    overflow-y: scroll;
+}
+
+.selected > .instanceContentDiv {
+    display: block;
+}
+
+.instanceContentDiv {
+    contain: size;
+    display: none;
+    height: 100%;
+
+}
+
+.instanceStagesContainer {
+    height: 100%;
+    display: flex;
+        overflow-x: scroll;
+
+
+}
+
+.instanceStage {
+    flex: 0 0 30%;
+    display: grid;
+    grid-template-rows: 1fr 6fr;
+    align-items: center;
+    border: 3px solid black;
+}
+
+.stageTitle {
+    border-bottom: 3px solid black;
+}
+
+.brainstormingScrollerContainer:has(.selected) > div:not(.selected){
+    /* display: none; */
+}
+
+.stageContentDiv {
+    height: 100%;
+    display: flex;
+    align-items: center;
+justify-content: center;}
+.stageContent {
+    margin: 0;
+    text-align: center;
+    padding: 5px 10px;
+
+}
+
+.addInstanceButton {
+    position: absolute;
+    background: white;
+    display: grid;
+    text-align: center;
+    align-content: center;
+    font-size: 1.5em;
+    height: 4.5vh;
+    width: 4.5vw;
+    bottom: 1%;
+    right: 1%;
+    border: 4px solid black;
+    border-radius: 10px;
+    cursor:grab;
+    /* transform: translateX(50%); */
+}
+
+.addInstanceButton:hover {
+    background-color: gold;
+    transition: background-color 2s ease;
+}

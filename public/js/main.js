@@ -1,5 +1,6 @@
 import db from "/js/db.js"
 import {setUpSession,getLatestSessionToken,makeOutdated,isValid, setGlobalVersionChecker} from "/js/session.js"
+import editing from "/js/editing.js"
 
 await setUpSession()
 const startingSessionToken = await getLatestSessionToken()
@@ -214,64 +215,21 @@ document.addEventListener('keydown',async e => {
 setKeyMovement()
 
 let createTextboxEventHandlers = () => {
-    const getTextboxObjects = document.querySelectorAll(".quickActionTask > p")
-    
-    getTextboxObjects.forEach(textbox => {
-        
-        textbox.addEventListener("beforeinput",(e) => {
-        if (e.inputType === "historyUndo") {
-            updateQuickActionTask(e.target)
-        }
-    })
-        
-        textbox.addEventListener("beforeinput",(e) => {
-        if (e.inputType === "historyRedo") {
-            updateQuickActionTask(e.target)
-        }
-    })   
-
-            textbox.addEventListener("blur",(e) => {
-            updateQuickActionTask(e.target)
-    })      
-
-    })
+    editing.createTextEventHandlers(".quickActionTask > p",updateQuickActionTask)
+    editing.createTextEventHandlers(".pi",updateProjects)
 }
 
 
 let updateQuickActionTask = async (task) => {
-    let taskid = task.dataset.id.slice(6)
+    let taskid = task.dataset.id
     await db.updateDatabase("quickActions",taskid,{content:task.textContent},startingSessionToken,await getLatestSessionToken())
 }
 
-let createProjectEventHandlers = () => {
-    const getProjectObjects = document.querySelectorAll(".pi")
-    
-    getProjectObjects.forEach(textbox => {
-        
-        textbox.addEventListener("beforeinput",(e) => {
-        if (e.inputType === "historyUndo") {
-            updateProjects(e.target,"projects")
-        }
-    })
-        
-        textbox.addEventListener("beforeinput",(e) => {
-        if (e.inputType === "historyRedo") {
-            updateProjects(e.target,"projects")
-        }
-    })   
-
-            textbox.addEventListener("blur",(e) => {
-            updateProjects(e.target,"projects")
-    })      
-
-    })
-}
-
-let updateProjects = async (project,table) => {
+let updateProjects = async (project) => {
     let messageObject = 
     {newValue : project.textContent,
         type : project.dataset.type,
-        table: table
+        table: "projects"
         
     }
     await db.updateDatabase("projects/projectsMainHub",project.dataset.id,messageObject,startingSessionToken,await getLatestSessionToken())
@@ -312,10 +270,20 @@ let createProjectPageEventListeners = () => {
     })
 }
 
+let generateOtherLinks = () => {
+    let setBrainstormingButton = () => {
+        let brainstormingButton = document.querySelector(".brainstormingButton")
+        brainstormingButton.addEventListener("click", () => {
+            location.replace('/brainstorming')
+        })
+    }
+    setBrainstormingButton()
+}
+generateOtherLinks()
+
 console.log(startingSessionToken)
 
 
 //Activating the functions
 createTextboxEventHandlers()
-createProjectEventHandlers()
 createProjectPageEventListeners()

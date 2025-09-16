@@ -191,8 +191,9 @@ border-right: 2px solid black;
     font-size: 90%;
 }
 
-.quickActionLabelAndButtonsContainer div:nth-child(1) {
+.brainstormingButton {
     margin-left: 5px;
+    cursor: grab;
 }
 
 .quickActionLabelAndButtonsContainer div:nth-child(3) {

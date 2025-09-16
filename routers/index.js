@@ -5,6 +5,7 @@ import { quickAccessInstances, secondaryAccessInstances } from "../controllers/a
 import quickActionsRouter from "./quickActions.js"
 import projectsRouter from "./projects.js"
 import sessionRouter from "./session.js"
+import brainstormingRouter from "./brainstorming.js"
 
 
 const router = express.Router()
@@ -13,6 +14,7 @@ const router = express.Router()
 router.use("/quickActions", quickActionsRouter);
 router.use("/projects", projectsRouter);
 router.use("/session", sessionRouter);
+router.use("/brainstorming", brainstormingRouter)
 
 
 router.get("/",async (req,res) => {

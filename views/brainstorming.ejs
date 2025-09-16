@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainstorming</title>
+</head>
+<body>
+    <a class="backToHubLink" href="/">Back to Hub</a>
+    <div class="brainstormingMainContainer">
+        <div class="brainstormingHeader">
+            <p>Brainstorming</p>
+        </div>
+        <div class="brainstormingContentContainer">
+            <div class="brainstormingScrollerContainer">
+                <%brainstormingInstances.forEach((instance) => {%>
+                    <div data-instanceID="<%=instance.instanceID%>" class="brainstormingInstance">
+                        <div class="instanceTitleDiv">
+                            <p class="instanceTitle" data-instanceID="<%=instance.id%>" contenteditable="plaintext-only"><%=instance.name%></p>
+                        </div>
+                        <div class="instanceContentDiv">
+                                <div class="instanceStagesContainer">
+                                    <%let brainstormingStages = ["initialDot","clarification","clarificationMap","association","processOutcome","prototype","integration","integrationStatus","additions"]%>
+                                    <%brainstormingStages.forEach((stage,i) => {   %>
+                                        <div data-stage="<%=i%>" class="instanceStage">
+                                            <div class="stageTitle">
+                                                <p>Stage: <%=stage%></p>
+                                            </div>
+                                            <div class="stageContentDiv">
+                                                <p contenteditable="plaintext-only" data-stage="<%=instance.content[i].stage%>" data-datapointID = <%=instance.content[i].id%> class="stageContent"><%=instance.content[i].content%></p>
+                                            </div>
+                                        </div>
+                                    <%})%>                                        
+                                </div>
+                        </div>
+                    </div>
+                    <%})%>
+                <div class="addInstanceButton">
+                    <p>+</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<link rel="stylesheet" href="/css/brainstorming.css">
+<script type="module" src="/js/brainstorming.js"></script>
+<script src="/reload/reload.js"></script>
+
+
+</html>

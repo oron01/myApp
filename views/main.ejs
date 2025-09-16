@@ -15,8 +15,7 @@
                 <% quickAccessInstances.forEach(instance => {%>
                     <a href="<%=instance.link%>" class="quickAccessInstanceContainer">
                     <div>
-                                                <p class="quickAccessInstanceText"><%=instance.text%></p>
-
+                    <p class="quickAccessInstanceText"><%=instance.text%></p>
                     </div>
                     <div style="background-image: url('<%= instance.img %>');"> </div>
                     </a>
@@ -37,14 +36,14 @@
             </div>
             <div class="quickActionContainer">
                 <div class="quickActionLabelAndButtonsContainer">
-                    <div>Brainstorming</div>
+                    <div class="brainstormingButton">Brainstorming</div>
                     <div>Quick Action Tab</div>
                     <div>Task Info</div>
                 </div>
                 <div class="quickActionTasksContainer">
                     <% quickActionTasks.forEach((task) => { %>
                         <div class="quickActionTask">
-                            <p data-moveType="qa" data-id="<%=`taskId${task.id}`%>" data-position="<%=task.position%>" contenteditable="plaintext-only"><%=task.content%></p>
+                            <p data-moveType="qa" data-id="<%=task.id%>" data-position="<%=task.position%>" contenteditable="plaintext-only"><%=task.content%></p>
                         </div>
                     <% }) %>
                 </div>

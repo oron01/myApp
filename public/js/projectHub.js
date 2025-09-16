@@ -1,5 +1,6 @@
 import db from "/js/db.js"
 import {setUpSession,getLatestSessionToken,makeOutdated,isValid} from "/js/session.js"
+import editing from "/js/editing.js"
 
 await setUpSession()
 const startingSessionToken = await getLatestSessionToken()
@@ -75,9 +76,11 @@ let setMovementButton = (buttonClass,modifier) => {
 })
 }
 
-let createNoteFunctionality = () => {
-    let notes = document.querySelectorAll(".testerInstance")
-    console.log(notes)
+let createNoteFunctionality = (notes=null) => {
+    if (notes == null) {
+    notes = document.querySelectorAll(".testerInstance")
+    console.log(notes)}
+    else {notes = [notes]}
 
     let openNote = (note) => {
         note.currentTarget.classList.add("selectedNote")
@@ -101,8 +104,71 @@ createNoteFunctionality()
 
 setMovementButton("prevPageButton", -1)
 setMovementButton("nextPageButton",1)
+
+return {createNoteFunctionality}
 }
-setCSS()
+
+let updateNoteNames = async (note) => {
+    let id = note.dataset.id
+    let noteType = note.dataset.type
+    let newVal = note.textContent
+    let newObj = db.createNewValuesObject(newVal,noteType,"note_instances")
+    await db.updateDatabase("projects/projectHub/noteInstances",id,newObj,startingSessionToken,await getLatestSessionToken())
+}
+
+let updateNoteMainContent = async (note) => {
+    let id = note.dataset.id
+    let noteType = note.dataset.type
+    let newVal = note.textContent
+    let newObj = db.createNewValuesObject(newVal,noteType,"note_instances")
+    await db.updateDatabase("projects/projectHub/noteInstances",id,newObj,startingSessionToken,await getLatestSessionToken())
+}
+
+let postNewNote = async (projectId) => {
+    let a = await db.insertNewDBRow("projects/projectHub/noteInstances/createNote",projectId,startingSessionToken,await getLatestSessionToken())
+    return a.newNote.rows[0]
+}
+
+let generateNewNoteElement = (id) => {
+    let divScroller = document.querySelector(".dataPageDataScrollerDiv")
+    let subject = divScroller.lastElementChild
+    console.log(subject)
+    let newNote = subject.cloneNode(true)
+    let newPosition = Number(newNote.dataset.position) + 1
+    newNote.dataset.position = newPosition
+    let fields = newNote.querySelectorAll("p")
+    fields.forEach((field) => {
+        field.dataset.id = id
+        field.textContent = "[]"
+    })
+    divScroller.appendChild(newNote)
+    return newNote
+
+
+}
+let setNewNoteEventListener = async () => {
+    let button = document.querySelector(".addNoteButton")
+    button.addEventListener("click",async (e) => {
+            const projectID = e.currentTarget.dataset.projectid
+            console.log(projectID)
+            let id = await postNewNote(projectID)
+            let newNoteElement = generateNewNoteElement(id.id)
+            cssFunctions.createNoteFunctionality(newNoteElement)
+            let noteHeader = (`.testerInstance:last-child [data-type="note_name"]`)
+            let noteMainContent = (`.testerInstance:last-child [data-type="content"]`)
+            editing.createTextEventHandlers(noteMainContent,updateNoteMainContent)
+            editing.createTextEventHandlers(noteHeader,updateNoteNames)
+        
+        }
+            
+    )
+}
+setNewNoteEventListener()
+
+editing.createTextEventHandlers(".testerInstance > p",updateNoteNames)
+editing.createTextEventHandlers(".noteMainContent",updateNoteMainContent)
+
+let cssFunctions = setCSS()
 
 
 setKeyMovement()

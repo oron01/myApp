@@ -7,12 +7,17 @@ router.patch("/projectsMainHub/:id",projectMainHubController.updateProjects)
 
 router.patch("/projectHub/mainDump/:id",projectMainHubController.updateProjects)
 
+router.patch("/projectHub/noteInstances/:id",projectMainHubController.updateProjects)
+
+router.post("/projectHub/noteInstances/createNote/:projectID",projectHubController.createNewNote)
+
 
 router.get("/projectHub/:id", async (req,res) => {
     let {id} = req.params
     const projectData =  await projectHubController.getProjectData(id)
     const mainDumpData = await projectHubController.getMainDump(id)
-    res.render("projectHub", {projectData,mainDumpData})
+    const notesData = await projectHubController.getNotesData(id)
+    res.render("projectHub", {projectData,mainDumpData,notesData})
 })
 
 export default router
