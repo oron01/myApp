@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%=projectData.project_name%></title>
         <link rel="stylesheet" href="/css/projectHub.css">
+        <link rel="stylesheet" href="/css/projectHubDataPage.css">
+        <link rel="stylesheet" href="/css/projectHubMainPage.css">
+        <link rel="stylesheet" href="/css/projectHubGoalsPage.css">
+<link href="https://fonts.googleapis.com/css2?family=New+Rocker&display=swap" rel="stylesheet">
+
+
         <script>window.projectID = <%=JSON.stringify(projectData.id)%></script>
 </head>
 <body>
@@ -59,10 +65,77 @@
   </div>
   <div class="quickAccessButtonsContainerDiv"></div>
 </div>
-<div class="nextPageContainer page3"></div>
+<div class="nextPageContainer page3 goalsPage">
+  <div class="goalsPageHeader">
+    <p><%=projectData.project_name%> Goals Plans and actions:</p>
+  </div>
+  <div class="goalsPageContentContainer">
+    <div class="goalsPageContentDiv">
+      <div class="goalsCardContainer">
+        <%goalsData.forEach((objective) => {%>
+          <div class="objectiveContainer">
+            <p class="objectiveHeader" contenteditable="plaintext-only"> <%=objective.name%></object>%></p>
+            <div class="objectiveDetails"> 
+              <p>Description: <%=objective.details%></p>
+            </div>
+            <div class="objectiveContents">
+            <%objective.subSteps %>
+            <%objective.subSteps.forEach((stage,count) => {%>
+              <%console.log(objective.subSteps.length)%>
+              <%if (stage.type == "action") {%>
+                    <div class="subObjectiveTask">
+                    <p class="goalTaskName">Task: <%=stage.name%></p>
+                    <p class="goalTaskDescription">Description: <%=stage.description%></p>
+                    </div>
+
+                <%}%>
+
+              <%if (stage.type == "sequence") {%>
+                <div class="subObjectiveSequence">Sequence: <%=stage.name%>
+                  <%stage.tasks.forEach((task,i) => {%>
+                    <div class="subSequenceTask">
+                    <p class="goalTaskName">Task: <%=task.name%></p>
+                    <p class="goalTaskDescription"> Description: <%=task.description%></p>
+                    </div>
+                                    <%if (stage.tasks.length > i+1) {%>
+                <div class="subSequenceSeparator"> \/</div>
+
+              <%}%>
+
+                    <%})%>
+              </div>
+
+              <%}%>
+
+
+
+                <%if (objective.subSteps.length > count) {%>
+                <div class="subObjectiveSeparator"> \/</div>
+
+              <%}%>
+
+              <%})%>
+            </div>
+
+            <%})%>
+            </div>
+      </div>
+      <div class="goalsSelectContainer">
+        <%goalsData.forEach((goal) => {%>
+          <div class="goalDiv">
+            <div class="goalIcon"></div>
+            <div class="goalTextbox"><%=goal.name%></div>
+          </div>
+          <%})%>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 
 </body>
   <script type="module" src="/js/projectHub.js"></script>
+    <script type="module" src="/js/projectHubGoalsPage.js"></script>
+
   <script src="/reload/reload.js"></script>
 </html>

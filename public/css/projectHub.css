@@ -6,7 +6,7 @@
 body {
     position: relative;
     background: black;
-    padding: 2.5vh 0vw;
+    /* padding: 2.5vh 0vw; */
     height: 97.5vh;
     width: calc((var(--pageCount)* 95vw));
     margin: 0;
@@ -22,28 +22,21 @@ body {
     font-weight: 700;
     color: white;
     background-color: black;
+    z-index: 2;
 }
 
 .mainContainer {
-    /* position: relative; */
     height: 100%;
     width: 100%;
     display: grid;
       grid-auto-flow: column;
   grid-auto-columns: 1fr;   
-  /* each page = 100% of viewport */
-    /* grid-template-columns: 1fr 1fr 1fr; */
-    /* gap: 5%; */
     margin: 0;
 }
 
 .position {
-    /* left: 50%; */
-    /* --centerFixer : 0; */
     --defaultPosition: calc(var(--pagesToMiddleCount) * (var(--pageWidth) * -1) - var(--pagesToMiddleCount) * -2.5vw);
     transform: translateX(calc(var(--defaultPosition) - var(--pageWidth) * var(--positionModifier) ));
-
-    /* centers regardless of width */
 }
 
 .animatePageTransitions {
@@ -52,7 +45,7 @@ body {
 }
 
 .mainContainer > div {
-        margin: 2.5vw;
+        margin: 0 2.5vw;
     background-color: white;
         align-self: center;
     height: 70%;
@@ -60,196 +53,7 @@ body {
 }
 
 .mainContainer > .selectedPage {
-    height: 90%;
-}
-
-.dataPageContainer {
-    display: grid;
-    grid-template-rows: 1fr 6fr;
-    align-items: center;
-}
-
-.dataPageHeader {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.dataPageHeader > p {
-    font-size: 2em;
-    font-weight: 700;
-    justify-self: center;
-    border-bottom: 4px solid black;
-}
-
-
-.dataPageContentContainer {
-    background-color: grey;
-    height: 100%;
-    padding: 5%;
-}
-
-.dataPageDataScrollerDiv {
-    position: relative;
-    background-color: purple;
-    min-height: 100%;
-    height: 100%;
-    display: flex;
-    overflow-y: scroll;
-    contain: size;
-    flex-direction: column;
-    text-align: center;
-}
-
-.dataPageDataScrollerDiv::-webkit-scrollbar {
-    display: none;
-}
-
-.addNoteButton {
-    position: absolute;
-    background: white;
-    display: grid;
-    text-align: center;
-    align-content: center;
-    font-size: 1.5em;
-    height: 4.5vh;
-    width: 4.5vw;
-    bottom: 1%;
-    right: 1%;
-    border: 4px solid black;
-    border-radius: 10px;
-    cursor:grab;
-    /* transform: translateX(50%); */
-}
-
-.addNoteButton:hover {
-    background-color: gold;
-    transition: background-color 2s ease;
-}
-
-.testerInstance {
-    /* height: 100%; */
-    display: grid;
-    flex: 0 0 1;
-    /* height: 10%; */
-    min-height: 10%;
-    border: 2px solid black;
-    transition: min-height 0.1s ease-in;
-    cursor: grab;
-    user-select: none;
-    text-align: center;
-    align-items: center;
-    contain: size;
-    grid-template-rows: 1fr 8fr;
-    align-items: center;
-}
-.testerInstance:has(p:hover) { pointer-events: none; } 
-.testerInstance > p {
-    display: grid;
-    justify-self: center;
-    justify-content: center;
-}
-
-.selectedNote {
-    top: 0;
-    width: 100%;
-    min-height: 100%;
-    transition: min-height 0.4s ease-in;
-    background-color: gold;
-    overflow-y: scroll;
-    contain: size;
-    padding: 0% 10%;
-}
-
-.selectedNote > div {
-        contain: size;
-        height: 100%;
-    display: block !important;
-
-}
-
-.dataPageDataScrollerDiv:has(.selectedNote) > div:not(.selectedNote){
-    display: none;
-}
-
-.testerInstance > div {
-        min-height: 0;
-        display: none;
-}
-
-.mainPageContainer {
-    min-height: 0;
-    display: grid;
-    grid-template-rows: 0.75fr 3fr 1fr;
-}
-
-.mainPageContainer > div {
-display: grid;
-justify-content: center;
-align-items: center;
-text-align: center;
-}
-
-.header {
-    /* background-color: red; */
-    font-size: 200%;
-}
-
-.header > p {
-    border: 4px solid black;
-    padding: 3px;
-}
-
-.header > p, span {
-    font-weight: 700;
-}
-
-.header span {padding-right: 5px;}
-
-.contentContainerDiv {
-    min-height: 0;    
-    background-color: black;
-    display: grid;
-    grid-template-rows: 1fr 4fr 1fr;
-    grid-template-columns: 1fr;
-}
-
-.contentContainerDiv > div { 
-    background-color: white;
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-}
-
-
-.contentTextHeader {
-display: grid;
-text-align: center;
-    font-size: 200%;
-    border-bottom: 3px solid black;
-    justify-self: center;
-    padding: 3px;
-    font-weight: 700;
-}
-
-
-.contentTextContainer {
-display: grid;
-height: 100%;
-
-}
-
-.contentText {
-    display: grid;
-    align-self: center;
-    justify-self: center;
-    width: 85%;
-    height: 85%;
-    border: 3px solid black;
-    padding: 10px;
-    contain: size;
-overflow-y: auto;
-overflow-x: hidden;
+    height: 95%;
 }
 
 .pageMoveButtonContainer {
@@ -257,10 +61,7 @@ overflow-x: hidden;
         top: 50vh;
     z-index: 1;
     border: 0;
-    /* width: 97.5vw; */
     display: flex;
-    /* grid-template-columns: 1fr 1fr;
-    grid-template-rows: 80%; */
     align-content: space-between;
     justify-content: space-between;
     transform: translateX(50%);

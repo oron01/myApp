@@ -17,7 +17,8 @@ router.get("/projectHub/:id", async (req,res) => {
     const projectData =  await projectHubController.getProjectData(id)
     const mainDumpData = await projectHubController.getMainDump(id)
     const notesData = await projectHubController.getNotesData(id)
-    res.render("projectHub", {projectData,mainDumpData,notesData})
+    const goalsData = await projectHubController.getGoalsData(id)
+    res.render("projectHub", {projectData,mainDumpData,notesData,goalsData})
 })
 
 export default router
