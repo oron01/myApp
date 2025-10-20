@@ -3,7 +3,7 @@ import {setUpSession,getLatestSessionToken,makeOutdated,isValid} from "/js/sessi
 import editing from "/js/editing.js"
 
 await setUpSession()
-const startingSessionToken = await getLatestSessionToken()
+export const startingSessionToken = await getLatestSessionToken()
 
 let contentText = document.querySelector(".contentText")
 

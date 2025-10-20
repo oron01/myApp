@@ -33,7 +33,6 @@
           <p>+</p>
         </div>
       <% notesData.forEach((note,i) => { %>
-        <%console.log(notesData)%>
         <div data-position="<%=i%>" class="testerInstance">
           <p data-type="note_name" data-id="<%=note.id%>" contenteditable="plaintext-only"> <%=note.note_name%></p>
           <div>
@@ -72,30 +71,43 @@
   <div class="goalsPageContentContainer">
     <div class="goalsPageContentDiv">
       <div class="goalsCardContainer">
-        <%goalsData.forEach((objective) => {%>
-          <div class="objectiveContainer">
-            <p class="objectiveHeader" contenteditable="plaintext-only"> <%=objective.name%></object>%></p>
-            <div class="objectiveDetails"> 
-              <p>Description: <%=objective.details%></p>
+        <%console.log(goalsData[0])%>
+        <%if (goalsData[0]) goalsData[0].objectives.forEach((objective) => {%>
+          <div class="objectiveContainer" data-type="objective" data-id=<%=objective.id%>>
+            <p class="objectiveHeader" data-key="name" contenteditable="plaintext-only"><%=objective.name%></p>
+            <div class="objectiveDetails">
+              <p class="objectiveDescription">Description: <span class ="descriptionField" data-key="description" contenteditable="plaintext-only"><%= objective.description || "description" %></span></p>
             </div>
             <div class="objectiveContents">
-            <%objective.subSteps %>
-            <%objective.subSteps.forEach((stage,count) => {%>
+            <%if (!objective.subSteps) {objective.subSteps = []} %>
+            <%if (objective.subSteps) {objective.subSteps.forEach((stage,count) => {%>
               <%console.log(objective.subSteps.length)%>
-              <%if (stage.type == "action") {%>
-                    <div class="subObjectiveTask">
-                    <p class="goalTaskName">Task: <%=stage.name%></p>
-                    <p class="goalTaskDescription">Description: <%=stage.description%></p>
+              <%if (stage.type == "task") {%>
+                    <div class="subObjectiveTask" data-id="<%=stage.id%>" data-type="task">
+                    <div class="taskOrderUpButton">/\</div>
+                    <div class="taskOrderDownButton">\/</div>
+                    <div class="checkSubObjectiveButton">✓</div>
+                    <div class="removeSubTaskButton">X</div>
+                    <p class="goalTaskName">Task: <span class="goalTaskNameField" data-key="name" contenteditable="plaintext-only"><%=stage.name%></span></p>
+                    <p class="goalTaskDescription">Description: <span class="goalTaskDescriptionField" data-key="description" contenteditable="plaintext-only"><%=stage.description%></span></p>
                     </div>
 
                 <%}%>
 
               <%if (stage.type == "sequence") {%>
-                <div class="subObjectiveSequence">Sequence: <%=stage.name%>
+                <div class="subObjectiveSequence" data-type="sequence" data-id="<%=stage.id%>">Sequence: <span class="sequenceNameField" data-key="name" contenteditable="plaintext-only"><%=stage.name%></span>
+                  <div class="sequenceOrderUpButton">/\</div>
+                  <div class="sequenceOrderDownButton">\/</div>
+                  <div class="removeSubSequenceButton">X</div>
+                  <div class="checkSubObjectiveButton">✓</div>
                   <%stage.tasks.forEach((task,i) => {%>
-                    <div class="subSequenceTask">
-                    <p class="goalTaskName">Task: <%=task.name%></p>
-                    <p class="goalTaskDescription"> Description: <%=task.description%></p>
+                    <div class="subSequenceTask" data-type="task" data-id="<%=task.id%>">
+                    <div class="taskOrderUpButton">/\</div>
+                    <div class="taskOrderDownButton">\/</div>
+                    <div class="checkSubObjectiveButton">✓</div>
+                    <div class="removeSubTaskButton">X</div>
+                    <p class="goalTaskName">Task: <span class="goalTaskNameField" data-key="name" contenteditable="plaintext-only"><%=task.name%></span></p>
+                    <p class="goalTaskDescription"> Description: <span class="goalTaskDescriptionField" data-key="description" contenteditable="plaintext-only"><%=task.description%></span></p>
                     </div>
                                     <%if (stage.tasks.length > i+1) {%>
                 <div class="subSequenceSeparator"> \/</div>
@@ -103,31 +115,72 @@
               <%}%>
 
                     <%})%>
+                 <div class="addNewSubtaskButton">+</div>
+
               </div>
 
               <%}%>
 
 
 
-                <%if (objective.subSteps.length > count) {%>
+                <%if (objective.subSteps.length > 1+ count) {%>
                 <div class="subObjectiveSeparator"> \/</div>
 
               <%}%>
 
               <%})%>
-            </div>
 
-            <%})%>
             </div>
-      </div>
+            <div class="addSubObjectiveButtons">
+              <div class="addSubObjectiveTaskButton button">+T</div>
+              <div class="addSubObjectiveSequenceButton button">+S</div>
+
+            </div>
+                        </div>
+                        
+
+
+
+            <%}})%>
+
+                    <%if (!goalsData[0]) {%>
+
+          <div class="objectiveContainer">
+            <p class="objectiveHeader" contenteditable="plaintext-only">Sample objective</object>%></p>
+            <div class="objectiveDetails"> 
+              <p>Description: Sample Details</p>
+            </div>
+            <div class="objectiveContents">
+            </div>
+            <div class="addSubObjectiveButtons">
+              <div class="addSubObjectiveTaskButton button">+T</div>
+              <div class="addSubObjectiveSequenceButton button">+S</div>
+
+            </div>
+                        </div>
+
+
+
+            <%}%>
+            </div>
       <div class="goalsSelectContainer">
-        <%goalsData.forEach((goal) => {%>
-          <div class="goalDiv">
+        <%if (goalsData[0]) goalsData.forEach((goal) => {%>
+          <div data-id="<%=goal.id%>" class="goalDiv">
             <div class="goalIcon"></div>
             <div class="goalTextbox"><%=goal.name%></div>
+            <div class="goalAddObjectiveButton">+</div>
           </div>
           <%})%>
+          <%if (!goalsData[0]) {%>
+                      <div class="goalDiv">
+            <div class="goalIcon"></div>
+            <div class="goalTextbox">OBamagoal</div>
+            <div class="goalAddObjectiveButton">+</div>
+          </div>
+            <%}%>
       </div>
+      </div>
+
     </div>
   </div>
 </div>

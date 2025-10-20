@@ -11,6 +11,9 @@ router.patch("/projectHub/noteInstances/:id",projectMainHubController.updateProj
 
 router.post("/projectHub/noteInstances/createNote/:projectID",projectHubController.createNewNote)
 
+router.get("/projectHub/getLatestID/:type/:projectID",projectHubController.getLatestID)
+
+router.patch("/projectHub/updateText/:type/:projectID/:id/:key",projectHubController.check)
 
 router.get("/projectHub/:id", async (req,res) => {
     let {id} = req.params
