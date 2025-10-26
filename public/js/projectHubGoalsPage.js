@@ -1,5 +1,5 @@
 import db from "/js/db.js"
-import {setUpSession,getLatestSessionToken,makeOutdated,isValid, setGlobalVersionChecker} from "/js/session.js"
+import {getLatestSessionToken,makeOutdated,isValid, setGlobalVersionChecker} from "/js/session.js"
 import { startingSessionToken } from "/js/projectHub.js"
 import editing from "/js/editing.js"
 
@@ -15,6 +15,9 @@ let newSubSequenceTaskButton = document.querySelectorAll('.addNewSubtaskButton')
 let newSequenceButtons = document.querySelectorAll('.addSubObjectiveSequenceButton')
 let newObjectiveButtons = document.querySelectorAll(".goalAddObjectiveButton")
 let openObj = ''
+let removeSubTaskButton = document.querySelectorAll('.removeSubTaskButton')
+let removeSequenceButton = document.querySelectorAll('.removeSubSequenceButton')
+let checkerButton = document.querySelectorAll('.checkSubObjectiveButton')
 
 let makeOpenCloseFunctions = (newClass,isInvalid=null) => {
 
@@ -32,6 +35,8 @@ let makeOpenCloseFunctions = (newClass,isInvalid=null) => {
 }
 return {open,close}
 }
+
+let checkInvalidity = () => {
 
     const isInvalidObjectiveClose = (e) => {
         let outcome = (!e.target.classList.contains("selectedObjectiveContainer")
@@ -53,16 +58,24 @@ return {open,close}
     && (!e.target.classList.contains("goalTaskDescription")))  
     return outcome}
 
+    return {isInvalidObjectiveClose,isInvalidSequenceClose,isInvalidTaskClose,isInvalidSubSequenceTaskClose}
+}
 
-const {open: openObjective, close:closeObjective} = makeOpenCloseFunctions("selectedObjectiveContainer",isInvalidObjectiveClose)
+let checkInv = checkInvalidity()
 
-const {open:openSequence, close:closeSequence} = makeOpenCloseFunctions("selectedSubObjectiveSequence",isInvalidSequenceClose)
-const {open:openTask, close:closeTask} = makeOpenCloseFunctions("selectedSubObjectiveTask",isInvalidTaskClose)
-const {open:openSubSequenceTask, close:closeSubSequenceTask} = makeOpenCloseFunctions("selectedSubSequenceTask",isInvalidSubSequenceTaskClose)
+const {open: openObjective, close:closeObjective} = makeOpenCloseFunctions("selectedObjectiveContainer",checkInv.isInvalidObjectiveClose)
+const {open:openSequence, close:closeSequence} = makeOpenCloseFunctions("selectedSubObjectiveSequence",checkInv.isInvalidSequenceClose)
+const {open:openTask, close:closeTask} = makeOpenCloseFunctions("selectedSubObjectiveTask",checkInv.isInvalidTaskClose)
+const {open:openSubSequenceTask, close:closeSubSequenceTask} = makeOpenCloseFunctions("selectedSubSequenceTask",checkInv.isInvalidSubSequenceTaskClose)
 
-let addNewTaskElement = () => {
-   let taskDiv = document.createElement("div")
+let addNewElementFunction = () => {
+
+let addNewTaskElement = async (e) => {
+
+    let createTasksElement = () => {
+    let taskDiv = document.createElement("div")
    taskDiv.classList = "subObjectiveTask"
+   taskDiv.dataset.type = "task"
     let orderUpButton = document.createElement("div")
    orderUpButton.classList = "taskOrderUpButton"
    orderUpButton.textContent = `/\\`
@@ -106,11 +119,35 @@ let addNewTaskElement = () => {
 
     let addEventListeners = () => {
         setButtonEventListeners([taskDiv],openTask)
+        setButtonEventListeners([removeButton],remove.removeSubTask)
     }
     addEventListeners()
+
+    }
+
+    let getLatestTaskID = async () => {
+    let latestTaskID = await db.getSubProjectID("projects/projectHub/getLatestID","task",window.projectID,currentSession,await getLatestSessionToken())
+        return latestTaskID.latestID.rows[0].id
+    }
+    let taskID = await getLatestTaskID()
+
+    let postNewTask = async (id) => {
+    console.log(e.target.closest("[data-type = 'objective']"))
+    let objectiveID = e.target.closest("[data-type = 'objective']").dataset.id
+    let sequenceID = null
+    if (e.target.closest("[data-type='sequence']")) sequenceID = e.target.closest("[data-type='sequence']").dataset.id
+
+    await db.postGoalsPart("projects/projectHub/postNew","task",window.projectID,id,currentSession,await getLatestSessionToken(),{sequenceID,objectiveID})
+}
+    createTasksElement(taskID)
+    postNewTask(taskID)
+
+
 }
 
-let addNewSubSequenceTaskElement = (e) => {
+let addNewSubSequenceTaskElement = async (e) => {
+    let createTaskElement = () => {
+
    let taskDiv = document.createElement("div")
    taskDiv.classList = "subSequenceTask"
     let orderUpButton = document.createElement("div")
@@ -150,7 +187,7 @@ let addNewSubSequenceTaskElement = (e) => {
     newSeparator.textContent = "▼"
     newSeparator.classList = "subSequenceSeparator"
 
-    let parentSequence = e.currentTarget.parentNode
+    let parentSequence = e.target.closest("[data-type='sequence']")
     let plusButton = parentSequence.querySelector('.addNewSubtaskButton')
     parentSequence.insertBefore(newSeparator,plusButton)
     parentSequence.insertBefore(taskDiv,plusButton)
@@ -162,9 +199,28 @@ let addNewSubSequenceTaskElement = (e) => {
         setButtonEventListeners([taskDiv],openSubSequenceTask)
     }
     addEventListeners()
+    }
+
+    let getLatestTaskID = async () => {
+    let latestTaskID = await db.getSubProjectID("projects/projectHub/getLatestID","task",window.projectID,currentSession,await getLatestSessionToken())
+        return latestTaskID.latestID.rows[0].id
+    }
+    let taskID = await getLatestTaskID()
+
+    let postNewTask = async (id) => {
+    console.log(e.target.closest("[data-type = 'objective']"))
+    let objectiveID = e.target.closest("[data-type = 'objective']").dataset.id
+    let sequenceID = null
+    if (e.target.closest("[data-type='sequence']")) sequenceID = e.target.closest("[data-type='sequence']").dataset.id
+
+    await db.postGoalsPart("projects/projectHub/postNew","task",window.projectID,id,currentSession,await getLatestSessionToken(),{sequenceID,objectiveID})
+}
+    createTaskElement(taskID)
+    postNewTask(taskID)
 }
 
-let addNewSequenceElement = () => {
+let addNewSequenceElement = async (e) => {
+    let createNewSequenceElement = () => {
    let sequenceDiv = document.createElement("div")
    sequenceDiv.classList = "subObjectiveSequence"
    sequenceDiv.textContent = "Sequence: "
@@ -213,12 +269,32 @@ let addNewSequenceElement = () => {
         setButtonEventListeners([addNewTaskButton],addNewSubSequenceTaskElement)
     }
     addEventListeners()
+    }
+    let getLatestSequenceID = async () => {
+        let latestSequenceID = await db.getSubProjectID("projects/projectHub/getLatestID","sequence",window.projectID,currentSession,await getLatestSessionToken())
+            return latestSequenceID.latestID.rows[0].id
+    }
+    let sequenceID = await getLatestSequenceID()
+
+    let postNewSequence = async (id) => {
+        let goalID = document.querySelector('.goalDiv')
+        goalID = goalID.dataset.id
+        console.log(e.target.closest("[data-type = 'objective']"))
+        let objectiveID = e.target.closest("[data-type = 'objective']").dataset.id
+        await db.postGoalsPart("projects/projectHub/postNew","sequence",window.projectID,id,currentSession,await getLatestSessionToken(),{goalID,objectiveID})
+    }
+    createNewSequenceElement(sequenceID)
+    postNewSequence(sequenceID)
+
 }
 
 let addNewObjectiveElement = async () => {
-    let createNewObjectiveElement = () => {
+    let createNewObjectiveElement = async (id) => {
 let objectiveContainerDiv = document.createElement("div")
 objectiveContainerDiv.classList = "objectiveContainer"
+objectiveContainerDiv.dataset.type = "objective"
+objectiveContainerDiv.dataset.id = id
+
 
 let objectiveHeader = document.createElement("p")
 objectiveHeader.classList = "objectiveHeader"
@@ -272,11 +348,75 @@ addEventListeners()
     }
     let getObjectiveID = async () => {
         let latestObjectiveID = await db.getSubProjectID("projects/projectHub/getLatestID","objective",window.projectID,currentSession,await getLatestSessionToken())
-        return objectiveID
+        console.log(latestObjectiveID.latestID.rows[0].id)
+        return latestObjectiveID.latestID.rows[0].id
     }
-let objectiveID = getObjectiveID()
-    createNewObjectiveElement(objectiveID)
+    let postNewObjectiveElement = async (id) => {
+        let goalID = document.querySelector('.goalDiv')
+        goalID = goalID.dataset.id
+        console.log(goalID)
+        await db.postGoalsPart("projects/projectHub/postNew","objective",window.projectID,id,currentSession,await getLatestSessionToken(),{goalID})
+    }
+let objectiveID = await getObjectiveID()
+    postNewObjectiveElement(objectiveID)
+    createNewObjectiveElement((objectiveID))
 }
+
+return {addNewTaskElement,addNewSubSequenceTaskElement,addNewSequenceElement,addNewObjectiveElement}
+}
+let addNew = addNewElementFunction()
+
+let removeElementFunction = () => {
+    let removeSubTask = (e) => {
+    let removeSubTaskElement = () => {
+        console.log(e.target)
+        let subTaskElement = e.target.closest('[data-type="task"]')
+        console.log(subTaskElement)
+                if (subTaskElement.previousElementSibling.classList.contains("subObjectiveSeparator")) {subTaskElement.previousElementSibling.remove()}
+        subTaskElement.remove()
+
+    }
+    let removeSubtaskFromDB = async () => {
+        let elemID = e.target.closest('[data-type="task"]').dataset.id
+        db.removeGoalsPart("projects/projectHub/remove","task",elemID,startingSessionToken,await getLatestSessionToken(),{})
+    }
+    removeSubTaskElement()
+    removeSubtaskFromDB()
+
+    }
+
+        let removeSequence = (e) => {
+        let removeSequenceElement = () => {
+                        console.log(e.currentTarget)
+        let sequenceElement = e.currentTarget.closest('[data-type="sequence"]')
+        console.log(sequenceElement)
+                if (sequenceElement.previousElementSibling && sequenceElement.previousElementSibling.classList.contains("subObjectiveSeparator")) {sequenceElement.previousElementSibling.remove()}
+        sequenceElement.remove()
+
+            }
+        let removeSequenceFromDB = async () => {
+            let elemID = e.target.closest('[data-type="sequence"]').dataset.id
+            db.removeGoalsPart("projects/projectHub/remove","sequence",elemID,startingSessionToken,await getLatestSessionToken(),{})
+
+
+        }
+        removeSequenceElement()
+        removeSequenceFromDB()
+    }
+
+    return {removeSubTask,removeSequence}
+}
+let remove = removeElementFunction()
+
+let markElementFunction = () => {
+let markTaskElement = (e) => {
+    let taskElement = e.currentTarget.closest('[data-type="task"]')
+    if (!taskElement.classList.contains("marked")) taskElement.classList.add("marked")
+        else {taskElement.classList.remove("marked")}
+}
+    return {markTaskElement}
+}
+let mark = markElementFunction()
 
 let updateText = async (e) => { //for some reason i've made e the target already
         let key = e.dataset.key
@@ -288,20 +428,27 @@ let updateText = async (e) => { //for some reason i've made e the target already
         // console.log({type,obama,id,key,newValuesObj})
         await db.updateGoalsPart("projects/projectHub/updateText",type,window.projectID,id,key,newValuesObj)
     }
-
+    
+let setTextEventHandlers = () => {
 editing.createTextEventHandlers(`.goalsPageContentDiv [contenteditable="plaintext-only"]`,updateText)
+}
+
+setTextEventHandlers()
 
 let setButtonEventListeners = (allButtonElements, handler) => {
 allButtonElements.forEach(button => {
     button.addEventListener("click", handler)
 })
 }
+
 setButtonEventListeners(objectiveButtons,openObjective)
 setButtonEventListeners(sequenceButtons,openSequence)
 setButtonEventListeners(taskButtons,openTask)
 setButtonEventListeners(subSequenceTaskButtons,openSubSequenceTask)
-setButtonEventListeners(newSubObjectiveTaskButtons,addNewTaskElement)
-setButtonEventListeners(newSubSequenceTaskButton,addNewSubSequenceTaskElement)
-setButtonEventListeners(newSequenceButtons,addNewSequenceElement)
-setButtonEventListeners(newObjectiveButtons,addNewObjectiveElement)
-
+setButtonEventListeners(newSubObjectiveTaskButtons,addNew.addNewTaskElement)
+setButtonEventListeners(newSubSequenceTaskButton,addNew.addNewSubSequenceTaskElement)
+setButtonEventListeners(newSequenceButtons,addNew.addNewSequenceElement)
+setButtonEventListeners(newObjectiveButtons,addNew.addNewObjectiveElement)
+setButtonEventListeners(removeSubTaskButton,remove.removeSubTask)
+setButtonEventListeners(removeSequenceButton,remove.removeSequence)
+setButtonEventListeners(checkerButton,mark.markTaskElement)

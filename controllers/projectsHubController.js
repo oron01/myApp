@@ -1,4 +1,3 @@
-import { error } from "console"
 import db from "../db/db.js"
 
 let getProjectData = async (id) => {
@@ -107,11 +106,67 @@ let getGoalsData = async (id) => {
 }
 
 let getLatestID = async (req,res) => {
-  let {type,projectID} = req.params
+  let {projectID,type} = req.params
   let test = "obama"
-  let latestID = await db.query(`SELECT id FROM project_objectives ORDER BY id DESC LIMIT 1; `,[])
+  let dbName
+  let allowedTypes = ['objective','sequence','task']
+  if (!allowedTypes.includes(type)) throw new Error(`invalid Type ${type}`)
+  if (type == 'task') dbName = 'project_tasks'
+  if (type == 'sequence') dbName = 'project_sequences'
+  if (type == 'objective') dbName = 'project_objectives'
+
+  let latestID = await db.query(`SELECT id FROM ${dbName} ORDER BY id DESC LIMIT 1; `,[])
+  latestID.rows[0].id += 1
   res.json({ok:true,test,type,projectID,latestID})
 }
+
+let postNew = async (req,res) => {
+  let {type,projectID} = req.params
+  const validTypes = ['task','sequence','objective','goal']
+if (!validTypes.includes(type)) throw new Error("invalid type")
+
+  let postNewObjective = async () => {
+    let {goalID} = req.body
+    console.log(goalID)
+    let requestPost = async () => {let a = await db.query("INSERT INTO project_objectives (name,project_id,goal_id,description) VALUES ('[]',$1,$2,'[]')",[projectID,goalID])}
+  requestPost()
+  }
+  let postNewSequence = async () => {
+    let {goalID,objectiveID} = req.body
+    let requestPost = async () => {let a = db.query("INSERT INTO project_sequences (name,project_id,goal_id,objective_id,description) VALUES ('[]',$1,$2,$3,'[]')",[projectID,goalID,objectiveID])}
+  requestPost()
+  }
+  let postNewTask = async () => {
+        let {goalID,objectiveID,sequenceID} = req.body
+    let requestPost = async () => {let a = db.query("INSERT INTO project_tasks (name,project_id,objective_id,sequence_id,description) VALUES ('[]',$1,$2,$3,'[]')",[projectID,objectiveID,sequenceID])}
+  requestPost()
+  }
+  let postNewGoal
+  if (type == 'objective') await postNewObjective()
+  if (type == 'sequence') await postNewSequence()
+  if (type == 'task') await postNewTask()
+
+    res.json({ok:true})
+}
+
+let remove = async (req,res) => {
+    let {type,instanceID} = req.params
+        let removeTask = async (instanceID) => {let a = db.query('DELETE FROM project_tasks WHERE id = $1',[instanceID])}
+        let removeSequence = async (instanceID) => {
+          let sequenceInstances = await db.query('SELECT * FROM project_tasks WHERE sequence_id = $1',[instanceID])
+          console.log("banana")
+          console.log(sequenceInstances.rows[0])
+          let a
+          if (!sequenceInstances.rows[0]) a = db.query('DELETE FROM project_sequences WHERE id = $1',[instanceID])
+        }
+
+
+    if (type == 'task') {await removeTask(instanceID)}
+    if (type == 'sequence') {await removeSequence(instanceID)}
+
+        res.json({ok:true})
+
+  }
 
 let check = async (req,res) => {
   let {id,projectID,key,type} = req.params
@@ -133,4 +188,4 @@ if (!validColumns.includes(key)) throw new Error("invalid key name")
   res.json({ok:true,newVal})
 }
 
-export default {getMainDump,getProjectData,getNotesData,createNewNote,getGoalsData,getLatestID,check}
+export default {getMainDump,getProjectData,getNotesData,createNewNote,getGoalsData,getLatestID,check,postNew,remove}
