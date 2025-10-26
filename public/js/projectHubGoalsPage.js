@@ -72,10 +72,11 @@ let addNewElementFunction = () => {
 
 let addNewTaskElement = async (e) => {
 
-    let createTasksElement = () => {
+    let createTasksElement = (taskID) => {
     let taskDiv = document.createElement("div")
    taskDiv.classList = "subObjectiveTask"
    taskDiv.dataset.type = "task"
+   taskDiv.dataset.id = taskID
     let orderUpButton = document.createElement("div")
    orderUpButton.classList = "taskOrderUpButton"
    orderUpButton.textContent = `/\\`
@@ -96,6 +97,7 @@ let addNewTaskElement = async (e) => {
    taskName.append(taskNameField)
    taskNameField.textContent = '[]'
    taskNameField.contentEditable = "plaintext-only"
+   taskNameField.dataset.key = 'name'
    let taskDescription = document.createElement("p")
    taskDescription.classList = "goalTaskDescription"
    taskDescription.textContent = "Description:"
@@ -103,6 +105,7 @@ let addNewTaskElement = async (e) => {
    taskDescriptionField.classList = "goalTaskDescriptionField"
    taskDescriptionField.textContent = '[]'
    taskDescriptionField.contentEditable = "plaintext-only"
+   taskDescriptionField.dataset.key = 'description'
    taskDescription.append(taskDescriptionField)
    
    let allChildren = [orderUpButton,orderDownButton,checkButton,removeButton,taskName,taskDescription]
@@ -126,10 +129,11 @@ let addNewTaskElement = async (e) => {
     }
 
     let getLatestTaskID = async () => {
-    let latestTaskID = await db.getSubProjectID("projects/projectHub/getLatestID","task",window.projectID,currentSession,await getLatestSessionToken())
+    let latestTaskID = await db.getSubProjectID("projects/projectHub/getLatestID","task",currentSession,await getLatestSessionToken())
         return latestTaskID.latestID.rows[0].id
     }
     let taskID = await getLatestTaskID()
+    console.log(taskID + 'bnana')
 
     let postNewTask = async (id) => {
     console.log(e.target.closest("[data-type = 'objective']"))
@@ -146,10 +150,12 @@ let addNewTaskElement = async (e) => {
 }
 
 let addNewSubSequenceTaskElement = async (e) => {
-    let createTaskElement = () => {
+    let createTaskElement = async (taskID) => {
 
    let taskDiv = document.createElement("div")
    taskDiv.classList = "subSequenceTask"
+   taskDiv.dataset.type = 'task'
+    taskDiv.dataset.id = taskID
     let orderUpButton = document.createElement("div")
    orderUpButton.classList = "taskOrderUpButton"
    orderUpButton.textContent = `/\\`
@@ -170,6 +176,7 @@ let addNewSubSequenceTaskElement = async (e) => {
    taskName.append(taskNameField)
    taskNameField.textContent = '[]'
    taskNameField.contentEditable = "plaintext-only"
+   taskNameField.dataset.key = 'name'
    let taskDescription = document.createElement("p")
    taskDescription.classList = "goalTaskDescription"
    taskDescription.textContent = "Description:"
@@ -177,6 +184,7 @@ let addNewSubSequenceTaskElement = async (e) => {
    taskDescriptionField.classList = "goalTaskDescriptionField"
    taskDescriptionField.textContent = '[]'
    taskDescriptionField.contentEditable = "plaintext-only"
+   taskDescriptionField.dataset.key = 'description'
    taskDescription.append(taskDescriptionField)
    
    let allChildren = [orderUpButton,orderDownButton,checkButton,removeButton,taskName,taskDescription]
@@ -197,15 +205,17 @@ let addNewSubSequenceTaskElement = async (e) => {
 
     let addEventListeners = () => {
         setButtonEventListeners([taskDiv],openSubSequenceTask)
+        setTextEventHandlers("",taskDiv)
     }
     addEventListeners()
     }
 
     let getLatestTaskID = async () => {
-    let latestTaskID = await db.getSubProjectID("projects/projectHub/getLatestID","task",window.projectID,currentSession,await getLatestSessionToken())
+    let latestTaskID = await db.getSubProjectID("projects/projectHub/getLatestID",'task',currentSession,await getLatestSessionToken())
         return latestTaskID.latestID.rows[0].id
     }
     let taskID = await getLatestTaskID()
+    console.log(taskID)
 
     let postNewTask = async (id) => {
     console.log(e.target.closest("[data-type = 'objective']"))
@@ -271,7 +281,7 @@ let addNewSequenceElement = async (e) => {
     addEventListeners()
     }
     let getLatestSequenceID = async () => {
-        let latestSequenceID = await db.getSubProjectID("projects/projectHub/getLatestID","sequence",window.projectID,currentSession,await getLatestSessionToken())
+        let latestSequenceID = await db.getSubProjectID("projects/projectHub/getLatestID","sequence",currentSession,await getLatestSessionToken())
             return latestSequenceID.latestID.rows[0].id
     }
     let sequenceID = await getLatestSequenceID()
@@ -347,7 +357,7 @@ setButtonEventListeners([addSubObjectiveSequenceButton],addNewSequenceElement)
 addEventListeners()
     }
     let getObjectiveID = async () => {
-        let latestObjectiveID = await db.getSubProjectID("projects/projectHub/getLatestID","objective",window.projectID,currentSession,await getLatestSessionToken())
+        let latestObjectiveID = await db.getSubProjectID("projects/projectHub/getLatestID","objective",currentSession,await getLatestSessionToken())
         console.log(latestObjectiveID.latestID.rows[0].id)
         return latestObjectiveID.latestID.rows[0].id
     }
@@ -419,18 +429,18 @@ let markTaskElement = (e) => {
 let mark = markElementFunction()
 
 let updateText = async (e) => { //for some reason i've made e the target already
-        let key = e.dataset.key
-        let type = e.closest("[data-type]").dataset.type
-        let id = e.closest("[data-id]").dataset.id
+        let key = e.target.dataset.key
+        let type = e.target.closest("[data-type]").dataset.type
+        let id = e.target.closest("[data-id]").dataset.id
         
-        let newValuesObj = {val : e.textContent}
+        let newValuesObj = {val : e.target.textContent}
         let obama = window.projectID
         // console.log({type,obama,id,key,newValuesObj})
-        await db.updateGoalsPart("projects/projectHub/updateText",type,window.projectID,id,key,newValuesObj)
+        await db.updateGoalsPart("projects/projectHub/updateText",type,id,key,newValuesObj,startingSessionToken,await getLatestSessionToken())
     }
     
-let setTextEventHandlers = () => {
-editing.createTextEventHandlers(`.goalsPageContentDiv [contenteditable="plaintext-only"]`,updateText)
+let setTextEventHandlers = (selector=".goalsPageContentDiv",optElem=undefined) => {
+editing.createTextEventHandlers(`${selector} [contenteditable="plaintext-only"]`,updateText,optElem)
 }
 
 setTextEventHandlers()

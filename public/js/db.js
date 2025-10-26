@@ -38,26 +38,27 @@ let insertNewDBRow = async (url,id,startingSessionToken,currentSessionToken) => 
 
 }
 
-let getSubProjectID = async (url,type,projectID,startingSessionToken,currentSessionToken) => {
+let getSubProjectID = async (url,type,startingSessionToken,currentSessionToken) => {
         if (!isValid(startingSessionToken,currentSessionToken)) {
         alert(`${startingSessionToken} then ${currentSessionToken}`)
         makeOutdated()
         return} 
 
-    const res = await fetch(`/${url}/${projectID}/${type}`)
+    const res = await fetch(`/${url}/${type}`)
           const data = await res.json();
         console.log(data); // { ok: true, updated: {…} }
     return data
 
 }
 
-let updateGoalsPart = async (url,type,projectID,id,key,newValuesObj,startingSessionToken,currentSessionToken) => {
+let updateGoalsPart = async (url,type,id,key,newValuesObj,startingSessionToken,currentSessionToken) => {
     if (!isValid(startingSessionToken,currentSessionToken)) {
         alert(`${startingSessionToken} then ${currentSessionToken}`)
         makeOutdated()
         return} 
 
-    const res = await fetch(`/${url}/${type}/${projectID}/${id}/${key}`, {
+        console.log({url,type,id,key,newValuesObj,startingSessionToken,currentSessionToken})
+    const res = await fetch(`/${url}/${type}/${id}/${key}`, {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(newValuesObj)
@@ -74,6 +75,7 @@ let postGoalsPart = async (url,type,projectID,id,startingSessionToken,currentSes
         console.log("ad")
         console.log(optBody)
 
+        console.log("argh")
     const res = await fetch(`/${url}/${type}/${projectID}/${id}`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},

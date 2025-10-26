@@ -11,9 +11,9 @@ router.patch("/projectHub/noteInstances/:id",projectMainHubController.updateProj
 
 router.post("/projectHub/noteInstances/createNote/:projectID",projectHubController.createNewNote)
 
-router.get("/projectHub/getLatestID/:projectID/:type",projectHubController.getLatestID)
+router.get("/projectHub/getLatestID/:type",projectHubController.getLatestID)
 
-router.patch("/projectHub/updateText/:type/:projectID/:id/:key",projectHubController.check)
+router.patch("/projectHub/updateText/:type/:id/:key",projectHubController.check)
 
 router.post("/projectHub/postNew/:type/:projectID/:id",projectHubController.postNew)
 router.patch("/projectHub/remove/:type/:instanceID",projectHubController.remove)

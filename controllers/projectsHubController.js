@@ -106,7 +106,7 @@ let getGoalsData = async (id) => {
 }
 
 let getLatestID = async (req,res) => {
-  let {projectID,type} = req.params
+  let {type} = req.params
   let test = "obama"
   let dbName
   let allowedTypes = ['objective','sequence','task']
@@ -115,9 +115,9 @@ let getLatestID = async (req,res) => {
   if (type == 'sequence') dbName = 'project_sequences'
   if (type == 'objective') dbName = 'project_objectives'
 
-  let latestID = await db.query(`SELECT id FROM ${dbName} ORDER BY id DESC LIMIT 1; `,[])
-  latestID.rows[0].id += 1
-  res.json({ok:true,test,type,projectID,latestID})
+  let latestID = await db.query(`SELECT last_value as id FROM ${dbName}_id_seq;`)  
+  latestID.rows[0].id = Number(latestID.rows[0].id) + 1
+  res.json({ok:true,test,type,latestID})
 }
 
 let postNew = async (req,res) => {
@@ -169,7 +169,7 @@ let remove = async (req,res) => {
   }
 
 let check = async (req,res) => {
-  let {id,projectID,key,type} = req.params
+  let {id,key,type} = req.params
   let newVal = req.body.val
   let cleanedType
   console.log("keyname" + key)
@@ -181,9 +181,9 @@ const validColumns = ["name", "description"]
 if (!validColumns.includes(key)) throw new Error("invalid key name")
 
     db.query(`UPDATE project_${cleanedType} 
-      SET ${key} = $3
-      WHERE project_id = $1 AND id = $2`
-      ,[projectID,id,newVal])
+      SET ${key} = $2
+      WHERE id = $1`
+      ,[id,newVal])
       
   res.json({ok:true,newVal})
 }

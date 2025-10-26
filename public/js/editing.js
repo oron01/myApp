@@ -1,24 +1,24 @@
-let createTextEventHandlers = (querySelector,updateFunction) => {
-    let getTextboxObjects = document.querySelectorAll(querySelector)
+let createTextEventHandlers = (querySelector,updateFunction,optElem=document) => {
+    let getTextboxObjects = optElem.querySelectorAll(querySelector)
 
     if (!(getTextboxObjects instanceof NodeList)) {getTextboxObjects = [getTextboxObjects]}
-    
+    console.log("joebama")
     getTextboxObjects.forEach(textbox => {
         
         textbox.addEventListener("beforeinput",(e) => {
         if (e.inputType === "historyUndo") {
-            updateFunction(e.target)
+            updateFunction(e)
         }
     })
         
         textbox.addEventListener("beforeinput",(e) => {
         if (e.inputType === "historyRedo") {
-            updateFunction(e.target)
+            updateFunction(e)
         }
     })   
 
             textbox.addEventListener("blur",(e) => {
-            updateFunction(e.target)
+            updateFunction(e)
     })      
     })
 
