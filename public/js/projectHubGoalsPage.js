@@ -230,15 +230,18 @@ let addNewSubSequenceTaskElement = async (e) => {
 }
 
 let addNewSequenceElement = async (e) => {
-    let createNewSequenceElement = () => {
+    let createNewSequenceElement = (instanceID) => {
    let sequenceDiv = document.createElement("div")
    sequenceDiv.classList = "subObjectiveSequence"
    sequenceDiv.textContent = "Sequence: "
+   sequenceDiv.dataset.type = 'sequence'
+   sequenceDiv.dataset.id = instanceID
 
    let sequenceDivNameField = document.createElement('span')
    sequenceDivNameField.classList = "sequenceNameField"
    sequenceDivNameField.textContent = '[]'
       sequenceDivNameField.contentEditable = "plaintext-only"
+      sequenceDivNameField.dataset.key = 'name'
 
 
     let orderUpButton = document.createElement("div")
@@ -275,8 +278,10 @@ let addNewSequenceElement = async (e) => {
     contentContainer.appendChild(sequenceDiv)
 
     let addEventListeners = () => {
+        setTextEventHandlers("",sequenceDiv)
         setButtonEventListeners([sequenceDiv],openSequence)
         setButtonEventListeners([addNewTaskButton],addNewSubSequenceTaskElement)
+        setButtonEventListeners([removeButton],remove.removeSequence)
     }
     addEventListeners()
     }
@@ -397,8 +402,8 @@ let removeElementFunction = () => {
 
         let removeSequence = (e) => {
         let removeSequenceElement = () => {
-                        console.log(e.currentTarget)
-        let sequenceElement = e.currentTarget.closest('[data-type="sequence"]')
+                        console.log(e.target)
+        let sequenceElement = e.target.closest('[data-type="sequence"]')
         console.log(sequenceElement)
                 if (sequenceElement.previousElementSibling && sequenceElement.previousElementSibling.classList.contains("subObjectiveSeparator")) {sequenceElement.previousElementSibling.remove()}
         sequenceElement.remove()
